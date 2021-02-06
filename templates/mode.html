@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+var fcount=1;
+function famClicked(btn){
+  var property = document.getElementById(btn);
+  if (fcount == 0){
+    property.style.backgroundColor = "#ffff";
+    property.style.color = "black";
+    fcount = 1;
+  } else {
+    property.style.backgroundColor = "#f363b6";
+    property.style.color = "white";
+    fcount = 0;
+  }
+}
+
+var ocount=1;
+function outClicked(btn){
+  var property = document.getElementById(btn);
+  if (ocount == 0){
+    property.style.backgroundColor = "#ffff";
+    property.style.color = "black";
+    ocount = 1;
+  } else {
+    property.style.backgroundColor = "#6376f2";
+    property.style.color = "white";
+    ocount = 0;
+  }
+}
+
+var acount=1;
+function allClicked(btn){
+  var property = document.getElementById(btn);
+  if (acount == 0){
+    property.style.backgroundColor = "#ffff";
+    property.style.color = "black";
+    acount = 1;
+  } else {
+    property.style.backgroundColor = "#42c324";
+    property.style.color = "white";
+    acount = 0;
+  }
+}
+
+var ecount=1;
+function easyClicked(btn){
+  var property = document.getElementById(btn);
+  if (ecount == 0){
+    property.style.backgroundColor = "#ffff";
+    property.style.color = "black";
+    ecount = 1;
+  } else {
+    property.style.backgroundColor = "#edae39";
+    property.style.color = "white";
+    ecount = 0;
+  }
+}
+
+function startGame(fcount, acount){
+  var jq = $.ajax({
+    type: "POST",
+    url: "/playOne",
+    async: false,
+    data: { fam : fcount, all : acount }
+  });
+  return jq.responseText;
+}
+function getSelections() {
+  result = startGame(fcount==0, acount==0);
+  console.log("starting game...");
+  console.log(result);
+  location.href="/play"
+}
+
+</script>
+
+
+  <title>Scattergories</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mode.css') }}">
+</head>
+
+<body>
+  <header>
+    <div id="container" class="container">
+      <h1>Choose Mode</h1>
+    </div>
+  </header>
+  <div id="buttons">
+    <button class="family" id="family" onclick="famClicked('family')">Family-Only</button>
+    <button class="outsiders" id="outsiders" onclick="outClicked('outsiders')">Outsiders Present</button>
+  </div>
+  <hr style="width:50%;">
+  <div id="letters">
+    <button class="all" id="all" onclick="allClicked('all')">All Letters</button>
+	 <button class="easy" id="easy" onclick="easyClicked('easy')">Easy Letters</button>
+  </div>
+
+  <div id="start"> 
+    <button class="play" id="play" onclick="getSelections()">Start Game!</button>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <title>Scattergories</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/play.css') }}">
+</head>
+
+<script type="text/javascript">
+var allData = {{ data|tojson }};
+console.log(allData)
+
+var roundNum = "Round " + allData.round;
+var roundLet = allData.letter;
+var finished = false;
+if(allData.listLength < 10){
+	console.log("GAME OVER");
+	finished = true;
+}
+
+function setBlur() {
+	console.log("setting blur");
+	$('#container').css('filter', 'blur(10px)');
+	$('#categories').css('filter', 'blur(10px)');
+	$('#next').css('filter', 'blur(10px)');
+	$('#LetterCont').hide();
+	$('#roundTimer').hide();
+}
+
+function loadingCountdown() {
+	console.log("starting countdown")
+	var timeleft = 5;
+	var timer = setInterval(function(){
+		timeleft--;
+		document.getElementById("loading").textContent = timeleft;
+		if(timeleft <=0) {
+			$('#loading').innerHTML = "";
+			showRound();
+			timerCountdown();
+			clearInterval(timer);
+		}
+		},1000);
+		
+}
+
+function timerCountdown() {
+	console.log("starting timer")
+	var timeleft = 120;
+	var timer = setInterval(function(){
+		timeleft--;
+		var mins = Math.floor(timeleft / 60);
+		var secs = timeleft % 60;
+		document.getElementById("countdown").textContent = "" + mins + ":" + (secs < 10 ? "0" : "") + "" + secs;
+		if(timeleft <= 0) {
+			var audio = new Audio("TimerSound.mp3");
+			audio.play();
+			document.getElementById("timerSound").play();
+			clearInterval(timer);
+		}
+		},1000);
+}
+
+function showRound() {
+	var element = document.getElementById("loading");
+   element.parentNode.removeChild(element);
+	$('#container').css('filter', 'blur(0px)');
+	$('#categories').css('filter', 'blur(0px)');
+	$('#next').css('filter', 'blur(0px)');
+	$('#LetterCont').show();
+	$('#roundTimer').show();
+
+}
+
+function checkDone() {
+	console.log(finished);
+	if(finished == true) {
+		location.href="/done";
+	}
+	else {
+		location.href="/play";
+	}
+}
+</script>
+
+<body id="BODY">
+  <audio id="timerSound" src="/static/TimerSound.mp3" type="audio/mpeg"></audio>
+  <script> document.body.style.backgroundColor = allData.roundColor;
+			  window.onload = function() {
+				 setBlur();
+				 loadingCountdown();
+			  }
+  </script>
+
+  <div id="getReady">
+    <h1 id="loading">5</h1>
+  </div>
+
+  <div id="roundTimer">
+    <h1 id="countdown">2:30</h1>
+  </div>
+
+  <div class="container" id="container">
+    <h1 id='Round' onload="setBackground();"> <script> document.write(roundNum)</script> </h1>
+  </div>
+
+  <div id="LetterCont">
+    <h2 id="letter"> <script> document.write(roundLet) </script> </h2> 
+  </div>
+
+  <div id="categories">
+
+    <h2 id="cat1"> <script> document.write(" 1 - " + allData.categories[0])</script> </h2>
+    <h2 id="cat2"> <script> document.write(" 2 - " + allData.categories[1])</script> </h2>
+    <h2 id="cat3"> <script> document.write(" 3 - " + allData.categories[2])</script> </h2>
+    <h2 id="cat4"> <script> document.write(" 4 - " + allData.categories[3])</script> </h2>
+    <h2 id="cat5"> <script> document.write(" 5 - " + allData.categories[4])</script> </h2>
+    <h2 id="cat6"> <script> document.write(" 6 - " + allData.categories[5])</script> </h2>
+    <h2 id="cat7"> <script> document.write(" 7 - " + allData.categories[6])</script> </h2>
+    <h2 id="cat8"> <script> document.write(" 8 - " + allData.categories[7])</script> </h2>
+    <h2 id="cat9"> <script> document.write(" 9 - " + allData.categories[8])</script> </h2>
+    <h2 id="cat10"> <script> document.write("10 - " + allData.categories[9])</script> </h2>
+  </div>
+
+  <div id="next">
+    <button class="nextButt" id="nextButt" onclick="checkDone();">Next Round</button>
+  </div>
+</body>
+</html>
