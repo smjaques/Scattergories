@@ -18,11 +18,13 @@ if(allData.listLength < 10){
 	finished = true;
 }
 
-function setBlur() {
+function setBlur(action='start') {
 	console.log("setting blur");
 	$('#container').css('filter', 'blur(10px)');
 	$('#categories').css('filter', 'blur(10px)');
-	$('#next').css('filter', 'blur(10px)');
+	if(action == "start") {
+		$('#next').css('filter', 'blur(10px)');
+	}
 	$('#LetterCont').hide();
 	$('#roundTimer').hide();
 }
@@ -56,6 +58,7 @@ function timerCountdown() {
 			audio.play();
 			document.getElementById("timerSound").play();
 			clearInterval(timer);
+			setBlur("round");
 		}
 		},1000);
 }
